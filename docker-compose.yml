@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  drupal:
+    depends_on:
+      - db
+    image: drupal:9
+    ports:
+      - "8080:80"
+    restart: always
+    volumes:
+      - drupal_modules:/var/www/html/modules
+      - drupal_profiles:/var/www/html/profiles
+      - drupal_themes:/var/www/html/themes
+      - drupal_sites:/var/www/html/sites
+    environment:
+      DRUPAL_DATABASE: ${DB_NAME}
+      DRUPAL_DB_USER: ${DB_USER}
+      DRUPAL_DB_PASSWORD: ${DB_PASSWORD}
+  volumes:
+  db_data: {}
+  drupal_modules: {}
+  drupal_profiles: {}
+  drupal_themes: {}
+  drupal_sites: {}
